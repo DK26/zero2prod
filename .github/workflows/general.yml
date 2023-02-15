@@ -53,6 +53,9 @@ jobs:
   coverage:
     name: Code coverage
     runs-on: ubuntu-latest
+    container:
+      image: xd009642/tarpaulin:develop-nightly
+      options: --security-opt seccomp=unconfined
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -64,7 +67,5 @@ jobs:
           override: true
 
       - name: Run cargo-tarpaulin
-        uses: actions-rs/tarpaulin@v0.1
-        with:
-          version: 0.25.0
-          args: '--ignore-tests'
+        run: |
+          cargo +nightly tarpaulin --verbose --all-features --workspace --timeout 120 --out Xml
